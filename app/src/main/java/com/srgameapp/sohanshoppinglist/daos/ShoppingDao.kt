@@ -4,11 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
-import androidx.room.Update
 import androidx.room.Upsert
-import com.srgameapp.sohanshoppinglist.entities.ItemTable
-import com.srgameapp.sohanshoppinglist.entities.ShoppingItem
 import com.srgameapp.sohanshoppinglist.entities.ShoppingTable
 import org.jetbrains.annotations.Nullable
 

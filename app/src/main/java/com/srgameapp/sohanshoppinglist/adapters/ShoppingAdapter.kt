@@ -2,15 +2,10 @@ package com.srgameapp.sohanshoppinglist.adapters
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.srgameapp.sohanshoppinglist.R
-import com.srgameapp.sohanshoppinglist.databinding.ActivityShoppingAddBinding
-import com.srgameapp.sohanshoppinglist.databinding.MainTextItemBinding
 import com.srgameapp.sohanshoppinglist.databinding.ShoppingTextItemBinding
 import com.srgameapp.sohanshoppinglist.entities.ShoppingItem
 import com.srgameapp.sohanshoppinglist.uis.ShoppingAdd

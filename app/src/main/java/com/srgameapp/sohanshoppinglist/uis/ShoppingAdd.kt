@@ -1,5 +1,6 @@
 package com.srgameapp.sohanshoppinglist.uis
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.media.RouteListingPreference.Item
 import android.os.Build
@@ -26,7 +27,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-@Suppress("IMPLICIT_CAST_TO_ANY")
 class ShoppingAdd : AppCompatActivity() {
 
     lateinit var binding:ActivityShoppingAddBinding
@@ -45,7 +45,6 @@ class ShoppingAdd : AppCompatActivity() {
         val myLayoutManager = LinearLayoutManager(this)
         binding.shoppingAdd.layoutManager = myLayoutManager
         val myId = intent.getStringExtra("mylistid")
-        val gson = Gson()
 
 
         lifecycleScope.launch(Dispatchers.IO){
@@ -73,7 +72,6 @@ class ShoppingAdd : AppCompatActivity() {
 //  }
 
             val myListString = dao.getAShoppingTable(myId.toString())
-            val myList: MutableList<String> = mutableListOf()
             withContext(Dispatchers.Main) {
                 shoppingAdapter = ShoppingAdapter(applicationContext,myListString.shoppingList.toMutableList())
                         binding.shoppingAdd.adapter = shoppingAdapter
@@ -105,7 +103,6 @@ class ShoppingAdd : AppCompatActivity() {
                     val shoppingItem = myListString.shoppingList
                     val myAdapter = shoppingItem.toMutableList()
 
-                    val shoppingAdapter = ShoppingAdapter(applicationContext,myAdapter)
 
                     withContext(Dispatchers.Main){
                         val movedItem = myAdapter.removeAt(viewHolder.adapterPosition)
@@ -135,6 +132,7 @@ class ShoppingAdd : AppCompatActivity() {
             }
 
 
+            @SuppressLint("NotifyDataSetChanged")
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val viewPosition = viewHolder.adapterPosition
                 binding.shoppingAdd.removeViewAt(viewHolder.adapterPosition)
@@ -148,7 +146,7 @@ class ShoppingAdd : AppCompatActivity() {
 //                    binding.shoppingAdd.adapter =adapter}
 //                    dao.updateListAt(newStarterList.toList(),myId.toString())
 
-                    var myVar = dao.getAShoppingItem(myId.toString())
+                    val myVar = dao.getAShoppingItem(myId.toString())
                     val myList = ShoppingItemConverters.fromJson(myVar)
                     val mutableMyList = myList.toMutableList()
 

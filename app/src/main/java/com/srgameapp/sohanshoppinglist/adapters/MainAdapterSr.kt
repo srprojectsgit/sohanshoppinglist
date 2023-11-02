@@ -6,8 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.srgameapp.sohanshoppinglist.daos.AppDatabase
-import com.srgameapp.sohanshoppinglist.databinding.ActivityMainBinding
 import com.srgameapp.sohanshoppinglist.databinding.MainTextItemBinding
 import com.srgameapp.sohanshoppinglist.entities.ShoppingTable
 import com.srgameapp.sohanshoppinglist.uis.ShoppingAdd

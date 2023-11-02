@@ -2,13 +2,10 @@ package com.srgameapp.sohanshoppinglist.daos
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.srgameapp.sohanshoppinglist.entities.ShoppingItem
 import com.srgameapp.sohanshoppinglist.entities.ShoppingTable
-import java.lang.reflect.Type
 
-class Converters() {
-    private val gson: Gson = Gson()
+class Converters {
+
     @TypeConverter
     fun toShoppingTable(json: String): ShoppingTable {
         return Gson().fromJson(json, ShoppingTable::class.java)

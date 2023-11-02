@@ -5,7 +5,6 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.srgameapp.sohanshoppinglist.entities.ItemTable
 import com.srgameapp.sohanshoppinglist.entities.ShoppingTable
 
 @Database(entities = [ShoppingTable::class], version = 2)
