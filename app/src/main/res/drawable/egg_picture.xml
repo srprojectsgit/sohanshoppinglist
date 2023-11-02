@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="oval">
+            <!-- You can change the color of the egg here. -->
+            <solid android:color="#FFF4E5"/>
+            <size android:width="150dp" android:height="200dp"/>
+            <corners android:radius="50dp" />
+            <gradient android:angle="45"
+                android:startColor="#FFF4E5"
+                android:endColor="#E5D1B8"/>
+        </shape>
+    </item>
+</layer-list>
