@@ -2,6 +2,7 @@ package com.srgameapp.sohanshoppinglist.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,6 +10,7 @@ import com.srgameapp.sohanshoppinglist.R
 import com.srgameapp.sohanshoppinglist.databinding.ShoppingTextItemBinding
 import com.srgameapp.sohanshoppinglist.entities.ShoppingItem
 import com.srgameapp.sohanshoppinglist.uis.ShoppingAdd
+import java.util.TreeSet
 
 
 interface ItemTouchHelperAdapter {
@@ -24,8 +26,7 @@ class ShoppingAdapter(val context: Context, var shoppingItems:MutableList<Shoppi
     }
 
     companion object{
-        var checkedList:MutableSet<ShoppingItem> = mutableSetOf()
-
+        var checkedList: Set<ShoppingItem> = mutableSetOf()
 
     }
     val myIntent = Intent(context, ShoppingAdd::class.java)
@@ -41,6 +42,8 @@ class ShoppingAdapter(val context: Context, var shoppingItems:MutableList<Shoppi
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
+
         holder.adapterBinding.shoppingItemView.text = shoppingItems[position].toString()
 
 
@@ -62,44 +65,40 @@ class ShoppingAdapter(val context: Context, var shoppingItems:MutableList<Shoppi
 
         }
 
-//        holder.adapterBinding.checkBox.setOnCheckedChangeListener { compoundButton, b ->
-//
-//            if(compoundButton.isAccessibilityFocused){
-//                Log.i("Changed_True", "Changed to True")
-//            }
-//
-//        }
+        shoppingItems.forEach { item ->
+            checkedList.forEach{checkedListItem ->
+                if(shoppingItems[position]=== checkedListItem && checkedListItem.checked == true){
+                    holder.adapterBinding.checkBox.isChecked = true
+                }
+            }
+        }
 
-        checkedList = shoppingItems.toMutableSet()
 
+        if(checkedList.isEmpty()) {
+            checkedList = shoppingItems.toMutableSet()
+        }
 
         holder.adapterBinding.checkBox.setOnClickListener{
 
-            if(holder.adapterBinding.checkBox.isChecked) {
-                shoppingItems[position].checked = true
-                ShoppingAdapter.checkedList.forEach {
-                    if(it === shoppingItems[position]){
-                        it.checked = true
-                    }
-                }
 
-                shoppingItems = checkedList.toMutableList()
+            if(holder.adapterBinding.checkBox.isChecked) {
+              shoppingItems[position].checked = true
+                checkedList = shoppingItems.toMutableSet()
+                checkedList.forEach{
+                    Log.i("checkedList", it.itemName.toString() + " "+ it.checked.toString())
+                }
 
             }
 
             else if(!holder.adapterBinding.checkBox.isChecked){
-                if(shoppingItems[position].checked==true){
-                    ShoppingAdapter.checkedList.forEach {
-                        if(it === shoppingItems[position]){
-                            it.checked = false
-                        }
-                    }
-
-                    shoppingItems = checkedList.toMutableList()
-
+                shoppingItems[position].checked = false
+                checkedList = shoppingItems.toMutableSet()
+                checkedList.forEach{
+                    Log.i("checkedList", it.itemName.toString() + " "+ it.checked.toString())
                 }
 
-                }
+
+            }
 
 
 

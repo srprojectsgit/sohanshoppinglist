@@ -8,6 +8,7 @@ import com.srgameapp.sohanshoppinglist.MainActivity
 import com.srgameapp.sohanshoppinglist.R
 import com.srgameapp.sohanshoppinglist.daos.AppDatabase
 import com.srgameapp.sohanshoppinglist.databinding.ActivityAddListBinding
+import com.srgameapp.sohanshoppinglist.entities.ShoppingItem
 import com.srgameapp.sohanshoppinglist.entities.ShoppingTable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,9 +29,11 @@ lateinit var binding:ActivityAddListBinding
         binding.createListButton.setOnClickListener{
             lifecycleScope.launch(Dispatchers.IO) {
                 val mylistName = binding.listName.text.toString()
-                //dao.insertShoppingList(ShoppingTable(mylistName,ArrayList<String>()))
-//                val myIntent = Intent(this@AddListActivity, MainActivity::class.java)
-//                startActivity(myIntent)
+                val emptyShoppingList = mutableListOf<ShoppingItem>()
+                val myList = ShoppingTable(mylistName, emptyShoppingList)
+                dao.insert(myList)
+                val myIntent = Intent(this@AddListActivity, MainActivity::class.java)
+                startActivity(myIntent)
             }
         }
 

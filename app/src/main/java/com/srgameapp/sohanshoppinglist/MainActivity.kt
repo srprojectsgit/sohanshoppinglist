@@ -3,17 +3,22 @@ package com.srgameapp.sohanshoppinglist
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.srgameapp.sohanshoppinglist.adapters.MainAdapterSr
+import com.srgameapp.sohanshoppinglist.adapters.ShoppingAdapter
 import com.srgameapp.sohanshoppinglist.daos.AppDatabase
 import com.srgameapp.sohanshoppinglist.daos.ShoppingItemConverters
 import com.srgameapp.sohanshoppinglist.databinding.ActivityMainBinding
 import com.srgameapp.sohanshoppinglist.entities.ShoppingItem
 import com.srgameapp.sohanshoppinglist.entities.ShoppingTable
 import com.srgameapp.sohanshoppinglist.uis.AddListActivity
+import com.srgameapp.sohanshoppinglist.uis.ShoppingAdd
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -51,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
                 val anotherSampleList = mutableListOf(
                     ShoppingItem("Salt",1.50,false),
-                    ShoppingItem("Chips",2.50,true),
+                    ShoppingItem("Chips",2.50,false),
                     ShoppingItem("Ketchup",1.00,false),
                     ShoppingItem("Sugar",null,false),
                     ShoppingItem("Corn",1.00,false)
@@ -68,11 +73,6 @@ class MainActivity : AppCompatActivity() {
                 val table2 = ShoppingTable("Another_Sample_List",anotherSampleList)
                 dao.insert(table2)
 
-                val listNumber = dao.getAllShoppingItems()
-
-
-                val gson = Gson()
-                val allShoppingItems = ShoppingItemConverters.fromJson(listNumber)
 
 
 
@@ -112,10 +112,54 @@ class MainActivity : AppCompatActivity() {
 
 
 
+        ItemTouchHelper(object: ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN
+            , 0){
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+
+                lifecycleScope.launch(Dispatchers.IO){
+                    val myListString = dao.getAllShoppingTables()
+                    val myAdapter = myListString.toMutableList()
+
+                    withContext(Dispatchers.Main){
+                        val movedItem = myAdapter.removeAt(viewHolder.adapterPosition)
+                        myAdapter.add(target.adapterPosition,movedItem)
+                        binding.rView.adapter?.notifyItemMoved(viewHolder.adapterPosition, target.adapterPosition)
+
+
+                    }
+                    myListString.forEach{
+                        dao.insert(ShoppingTable(it.shoppingId, it.shoppingList))
+
+                    }
+
+                }
+
+
+
+return true
 
     }
 
-    override fun onStart() {
+            override fun isLongPressDragEnabled(): Boolean {
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                TODO("Not yet implemented")
+                }
+
+        }
+
+        ).attachToRecyclerView(binding.rView)
+
+    }
+
+            override fun onStart() {
         super.onStart()
         startList()
     }

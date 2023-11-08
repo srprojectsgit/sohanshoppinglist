@@ -31,7 +31,6 @@ class AddItems : AppCompatActivity() {
         val database = AppDatabase.getDatabase(this)
         val dao = database.shoppingDao()
 
-        val gson = Gson()
 
 //        binding.addItemButton.setOnClickListener{
 //        lifecycleScope.launch(Dispatchers.IO){
@@ -70,7 +69,7 @@ class AddItems : AppCompatActivity() {
 
                           mutableItem.add(ShoppingItem(itemAdd,priceAdd,false))}
                       tableObject.shoppingList = mutableItem.toList()
-                      dao.upsert(tableObject)
+                      dao.insert(tableObject)
 }
                   }
 

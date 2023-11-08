@@ -2,26 +2,18 @@ package com.srgameapp.sohanshoppinglist.uis
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.media.RouteListingPreference.Item
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.srgameapp.sohanshoppinglist.R
-import com.srgameapp.sohanshoppinglist.adapters.ItemTouchHelperAdapter
-import com.srgameapp.sohanshoppinglist.adapters.MainAdapterSr
 import com.srgameapp.sohanshoppinglist.adapters.ShoppingAdapter
 import com.srgameapp.sohanshoppinglist.daos.AppDatabase
 import com.srgameapp.sohanshoppinglist.daos.ShoppingItemConverters
 import com.srgameapp.sohanshoppinglist.databinding.ActivityShoppingAddBinding
-import com.srgameapp.sohanshoppinglist.entities.ShoppingItem
 import com.srgameapp.sohanshoppinglist.entities.ShoppingTable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -74,9 +66,20 @@ class ShoppingAdd : AppCompatActivity() {
             val myListString = dao.getAShoppingTable(myId.toString())
             withContext(Dispatchers.Main) {
                 shoppingAdapter = ShoppingAdapter(applicationContext,myListString.shoppingList.toMutableList())
+                if(!ShoppingAdapter.checkedList.isEmpty()){
+                    shoppingAdapter = ShoppingAdapter(applicationContext,ShoppingAdapter.checkedList.toMutableList())
+                }
                         binding.shoppingAdd.adapter = shoppingAdapter
   }
 
+
+            var myListString2 = dao.getAShoppingTable(myId.toString())
+            val updatedSet = ShoppingAdapter.checkedList
+            val updatedList = updatedSet.toMutableList()
+
+            if(!updatedList.isEmpty()) {
+                myListString2.shoppingList = updatedList
+            }
 
         }
 
@@ -99,7 +102,7 @@ class ShoppingAdd : AppCompatActivity() {
             ): Boolean {
 
                 lifecycleScope.launch(Dispatchers.IO){
-                    val myListString = dao.getAShoppingTable(myId.toString())
+                    var myListString = dao.getAShoppingTable(myId.toString())
                     val shoppingItem = myListString.shoppingList
                     val myAdapter = shoppingItem.toMutableList()
 
@@ -111,6 +114,9 @@ class ShoppingAdd : AppCompatActivity() {
 
 
                     }
+//
+//                    myListString.shoppingList = myAdapter
+//                    dao.insert(myListString)
 
 
                 }
@@ -153,11 +159,11 @@ class ShoppingAdd : AppCompatActivity() {
                     mutableMyList.removeAt(viewPosition)
 
                     val newShoppingTable = ShoppingTable(myId.toString(),mutableMyList)
-                    dao.upsert(newShoppingTable)
+                    dao.insert(newShoppingTable)
 
 
                     shoppingAdapter = ShoppingAdapter(applicationContext,mutableMyList)
-                                        withContext(Dispatchers.Main){
+                    withContext(Dispatchers.Main){
                     binding.shoppingAdd.adapter =shoppingAdapter}
 
 //                    Log.i("SR_TAG",viewHolder.itemView.)
@@ -208,24 +214,43 @@ class ShoppingAdd : AppCompatActivity() {
 
             val database = AppDatabase.getDatabase(this@ShoppingAdd)
             val dao = database.shoppingDao()
-
             val myId = intent.getStringExtra("mylistid")
-            val myListString2 = dao.getAShoppingTable(myId.toString())
+
+            var myListString2 = dao.getAShoppingTable(myId.toString())
 
             val updatedSet = ShoppingAdapter.checkedList
             val updatedList = updatedSet.toMutableList()
 
-            myListString2.shoppingList = updatedList
+            if(!updatedList.isEmpty()) {
+                myListString2.shoppingList = updatedList
+            }
 
-            dao.upsert(myListString2)
+            dao.insert(myListString2)
+
+
+
+
+
 
 
             withContext(Dispatchers.Main) {
-//                shoppingAdapter = ShoppingAdapter(applicationContext,myListString2.shoppingList.toMutableList())
-//                binding.shoppingAdd.adapter = shoppingAdapter
-             myListString2.shoppingList.forEach{
-                 Log.i("haschecked",it.checked.toString())
-             }
+                shoppingAdapter = ShoppingAdapter(applicationContext,myListString2.shoppingList.toMutableList())
+                if(!ShoppingAdapter.checkedList.isEmpty()){
+                    shoppingAdapter = ShoppingAdapter(applicationContext,ShoppingAdapter.checkedList.toMutableList())
+                }
+                binding.shoppingAdd.adapter = shoppingAdapter
+                myListString2.shoppingList.forEach{
+                    Log.i("haschecked",it.checked.toString())
+                }
+
+
+
+
+
+
+
+
+
 
 
         }

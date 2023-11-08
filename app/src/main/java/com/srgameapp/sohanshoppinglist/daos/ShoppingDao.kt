@@ -15,7 +15,7 @@ interface ShoppingDao {
     fun insert(shoppingList: ShoppingTable)
 
     @Nullable
-    @Upsert
+    @Upsert()
     fun upsert(shoppingList:ShoppingTable)
 
     @Query("SELECT* FROM ShoppingTable")
